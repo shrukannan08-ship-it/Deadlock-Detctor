@@ -47,6 +47,7 @@ src/
 
 ## 🚀 How to Run
 
+### Web Simulator (React + TypeScript)
 1. **Install dependencies**:
    ```bash
    npm install
@@ -61,3 +62,42 @@ src/
    ```bash
    npm run build
    ```
+
+---
+
+## ⚡ C Implementation (`c-implementation/`)
+
+The complete simulator functionality, workflow, algorithms, data structures, and terminal dashboard UI are implemented in modular standard C.
+
+```text
+c-implementation/
+├── main.c           # CLI test runner and interactive terminal dashboard loop
+├── simulator.c/.h   # State management, vector calculations, and validators
+├── deadlock.c/.h    # Standard Deadlock Detection Algorithm
+├── prevention.c/.h  # Banker's Safety & Resource-Request Prevention Algorithms
+├── display.c/.h     # Terminal OS-dashboard UI, cards, tables, telemetry
+├── graph.c/.h       # Resource Allocation Graph (RAG) generator and renderer
+├── trace.c/.h       # Playback stepper, active step banner, execution trace
+├── Makefile         # Standard Makefile for GCC
+├── build.bat        # Windows build and test execution script
+└── README.md        # Detailed C implementation documentation
+```
+
+### Build & Run C Simulator
+```cmd
+cd c-implementation
+build.bat
+```
+Or with GCC directly:
+```bash
+gcc -Wall -Wextra -std=c11 -O2 -I. main.c simulator.c deadlock.c prevention.c display.c graph.c trace.c -o simulator.exe
+./simulator.exe
+```
+
+### Run Automated Test Suites
+```bash
+./simulator.exe --test-safe      # Section 23 SAFE case
+./simulator.exe --test-deadlock  # Section 23 DEADLOCK case
+./simulator.exe --test-request   # Resource Request / Prevention test
+./simulator.exe --test-all       # Run all verification tests
+```

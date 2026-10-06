@@ -22,3 +22,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# C build artifacts
+*.exe
+*.o
+c-implementation/*.exe
+c-implementation/*.o
