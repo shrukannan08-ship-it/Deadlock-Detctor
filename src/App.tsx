@@ -16,6 +16,10 @@ import { ResourceGraph } from './components/ResourceGraph';
 import { SimulationActivity } from './components/SimulationActivity';
 import { ResourceRequestSection } from './components/ResourceRequestSection';
 import { ProcessInspectorDrawer } from './components/ProcessInspectorDrawer';
+import { AmbientBackground } from './components/AmbientBackground';
+import { SystemDock } from './components/SystemDock';
+import { HolographicTerminal } from './components/HolographicTerminal';
+import { QuickHelpModal } from './components/QuickHelpModal';
 import { detectDeadlock } from './algorithms/deadlockDetection';
 import { checkSafeState } from './algorithms/safeState';
 import type {
@@ -114,7 +118,12 @@ export function App() {
   // Process Inspector State
   const [inspectedProcess, setInspectedProcess] = useState<string | null>(null);
 
+  // Holographic OS Shell & Guide Modals
+  const [isTerminalOpen, setIsTerminalOpen] = useState<boolean>(false);
+  const [isHelpOpen, setIsHelpOpen] = useState<boolean>(false);
+
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
 
   // AUTOMATICALLY CALCULATE NEED MATRIX:
   // Need[i][j] = max(0, Max[i][j] - Allocation[i][j])
@@ -247,6 +256,41 @@ export function App() {
       window.scrollTo({ top: y, behavior: 'smooth' });
     }
   }, []);
+
+  // OS Global Keyboard Shortcuts (1-7 dock navigation, ~ for CLI, ? for help)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Don't trigger shortcuts if user is typing in an input or select
+      if (['INPUT', 'SELECT', 'TEXTAREA'].includes((e.target as HTMLElement)?.tagName)) {
+        return;
+      }
+
+      if (e.key === '`' || e.key === '~') {
+        e.preventDefault();
+        setIsTerminalOpen((prev) => !prev);
+      } else if (e.key === '?') {
+        e.preventDefault();
+        setIsHelpOpen((prev) => !prev);
+      } else if (e.key >= '1' && e.key <= '7') {
+        const sections: NavSection[] = [
+          'overview',
+          'simulation',
+          'trace',
+          'matrices',
+          'resources',
+          'analytics',
+          'request',
+        ];
+        const targetSection = sections[parseInt(e.key, 10) - 1];
+        if (targetSection) {
+          handleNavigateSection(targetSection);
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handleNavigateSection]);
 
   // Update active section on scroll
   useEffect(() => {
@@ -504,7 +548,10 @@ export function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#060814] text-slate-100 flex font-sans selection:bg-indigo-600 selection:text-white">
+    <div className="min-h-screen bg-[#03060d] text-slate-100 flex font-sans selection:bg-cyan-500/30 selection:text-cyan-200 relative overflow-x-hidden">
+      {/* 0. Ambient Holographic Background & Digital Dust Canvas */}
+      <AmbientBackground />
+
       {/* 1. LEFT SIDEBAR */}
       <Sidebar
         activeSection={activeSection}
@@ -517,7 +564,7 @@ export function App() {
       />
 
       {/* Main Content Area */}
-      <div className="lg:pl-64 flex-1 flex flex-col min-w-0">
+      <div className="lg:pl-64 flex-1 flex flex-col min-w-0 relative z-10 pb-20 sm:pb-24">
         {/* 2. TOP HEADER */}
         <Header
           status={overallStatus}
@@ -525,6 +572,8 @@ export function App() {
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
           onToggleSidebar={() => setIsSidebarOpen((prev) => !prev)}
+          onOpenTerminal={() => setIsTerminalOpen(true)}
+          onOpenQuickHelp={() => setIsHelpOpen(true)}
         />
 
         {/* Process Inspector Slide-over Drawer */}
@@ -719,11 +768,40 @@ export function App() {
 
         </main>
 
-        {/* NEXUS Terminal Footer */}
-        <footer className="border-t border-[#141d38] bg-[#070a19] py-4 px-6 text-center text-xs text-slate-400 font-sans">
-          NEXUS OS Terminal • Banker’s Algorithm Safety Engine & Deadlock Prevention System
+        {/* AETHER OS Footer */}
+        <footer className="border-t border-cyan-500/15 bg-[#02050f]/80 py-4 px-6 text-center text-xs font-mono text-cyan-400/80">
+          AETHER OS Holographic Terminal • Banker’s Safety Engine & Concurrency Kernel v3.2
         </footer>
       </div>
+
+      {/* Floating System Dock with Interactive Shortcuts */}
+      <SystemDock
+        activeSection={activeSection}
+        onSelectSection={handleNavigateSection}
+        status={overallStatus}
+        onOpenTerminal={() => setIsTerminalOpen(true)}
+        onOpenQuickHelp={() => setIsHelpOpen(true)}
+        onCheckSafeState={handleCheckSafeState}
+        onDetectDeadlock={handleDetectDeadlock}
+      />
+
+      {/* Holographic Interactive CLI Terminal */}
+      <HolographicTerminal
+        isOpen={isTerminalOpen}
+        onClose={() => setIsTerminalOpen(false)}
+        status={overallStatus}
+        numProcesses={numProcesses}
+        numResources={numResources}
+        available={available}
+        onRunSafeCheck={handleCheckSafeState}
+        onRunDeadlockDetect={handleDetectDeadlock}
+      />
+
+      {/* OS Quick Architecture & Hotkey Guide */}
+      <QuickHelpModal
+        isOpen={isHelpOpen}
+        onClose={() => setIsHelpOpen(false)}
+      />
     </div>
   );
 }

@@ -1,4 +1,13 @@
 import React from 'react';
+import {
+  Users,
+  Layers,
+  Cpu,
+  ShieldCheck,
+  ShieldAlert,
+  Activity,
+  Sparkles,
+} from 'lucide-react';
 import type { SimulationStatus } from '../types/deadlock';
 
 interface MetricCardsProps {
@@ -21,147 +30,140 @@ export const MetricCards: React.FC<MetricCardsProps> = ({
       case 'safe':
         return {
           title: 'SAFE STATE',
-          sub: `${safeSequenceCount}/${numProcesses} Safe Order`,
-          badge: '+100% SECURE',
-          badgeClass: 'bg-emerald-950/70 text-emerald-400 border-emerald-700/60',
+          sub: `${safeSequenceCount}/${numProcesses} Safe Sequence Verified`,
+          badge: '100% SECURE',
+          badgeClass: 'bg-emerald-950/70 text-emerald-400 border-emerald-500/40 shadow-[0_0_10px_rgba(16,185,129,0.25)]',
           textColor: 'text-emerald-400',
           sparkColor: '#10b981',
+          icon: ShieldCheck,
+          glowBorder: 'border-emerald-500/35 shadow-[0_0_20px_rgba(16,185,129,0.15)]',
         };
       case 'unsafe':
       case 'deadlocked':
         return {
           title: status === 'deadlocked' ? 'DEADLOCKED' : 'UNSAFE STATE',
-          sub: 'Circular Wait Detected',
+          sub: 'Circular Wait Cycle Detected',
           badge: 'BLOCKED',
-          badgeClass: 'bg-rose-950/70 text-rose-400 border-rose-700/60',
+          badgeClass: 'bg-rose-950/70 text-rose-400 border-rose-500/40 shadow-[0_0_10px_rgba(244,63,94,0.25)]',
           textColor: 'text-rose-400',
           sparkColor: '#f43f5e',
+          icon: ShieldAlert,
+          glowBorder: 'border-rose-500/35 shadow-[0_0_20px_rgba(244,63,94,0.15)]',
         };
       case 'running':
         return {
           title: 'SIMULATING',
-          sub: 'Executing Banker Step',
+          sub: 'Tracing Stepper Iteration',
           badge: 'ACTIVE RUN',
-          badgeClass: 'bg-blue-950/70 text-blue-400 border-blue-700/60',
-          textColor: 'text-blue-400',
-          sparkColor: '#38bdf8',
+          badgeClass: 'bg-cyan-950/70 text-cyan-400 border-cyan-500/40 shadow-[0_0_10px_rgba(6,182,212,0.25)]',
+          textColor: 'text-cyan-400',
+          sparkColor: '#22d3ee',
+          icon: Activity,
+          glowBorder: 'border-cyan-500/35 shadow-[0_0_20px_rgba(6,182,212,0.2)]',
         };
       default:
         return {
           title: 'SYSTEM READY',
-          sub: 'Safe State Verifier',
+          sub: 'Banker & Deadlock Verifier',
           badge: 'READY',
-          badgeClass: 'bg-indigo-950/70 text-indigo-300 border-indigo-700/60',
-          textColor: 'text-white',
-          sparkColor: '#818cf8',
+          badgeClass: 'bg-cyan-950/60 text-cyan-300 border-cyan-500/30',
+          textColor: 'text-cyan-200',
+          sparkColor: '#38bdf8',
+          icon: Cpu,
+          glowBorder: 'border-cyan-500/20',
         };
     }
   };
 
-  const stateInfo = getSystemStateDisplay();
-  const totalInstanceSum = totalResources.reduce((a, b) => a + b, 0);
+  const sysDisplay = getSystemStateDisplay();
+  const StateIcon = sysDisplay.icon;
+  const totalCapacitySum = totalResources.reduce((acc, curr) => acc + (curr || 0), 0);
+
+  const cards = [
+    {
+      title: 'TOTAL PROCESSES',
+      value: `${numProcesses} Units`,
+      sub: Array.from({ length: numProcesses }, (_, i) => `P${i + 1}`).join(', '),
+      badge: `RANGE P1..P${numProcesses}`,
+      badgeColor: 'text-cyan-300 bg-cyan-950/60 border-cyan-500/30',
+      icon: Users,
+    },
+    {
+      title: 'RESOURCE CLASSES',
+      value: `${numResources} Classes`,
+      sub: Array.from({ length: numResources }, (_, i) => `R${i + 1}`).join(', '),
+      badge: `${totalCapacitySum} TOTAL UNITS`,
+      badgeColor: 'text-sky-300 bg-sky-950/60 border-sky-500/30',
+      icon: Layers,
+    },
+    {
+      title: 'CONCURRENCY STATE',
+      value: sysDisplay.title,
+      sub: sysDisplay.sub,
+      badge: sysDisplay.badge,
+      badgeColor: sysDisplay.badgeClass,
+      textColor: sysDisplay.textColor,
+      icon: StateIcon,
+      customBorder: sysDisplay.glowBorder,
+    },
+    {
+      title: 'TOTAL CAPACITY',
+      value: `${totalCapacitySum} Units`,
+      sub: `Vector: [${totalResources.slice(0, numResources).join(', ')}]`,
+      badge: 'POOL MONITOR',
+      badgeColor: 'text-cyan-300 bg-cyan-950/60 border-cyan-500/30',
+      icon: Sparkles,
+    },
+  ];
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-      {/* Card 1: Total Processes (like Total Portfolio) */}
-      <div className="bg-[#0a0e22] border border-[#192344] rounded-2xl p-4.5 relative overflow-hidden flex flex-col justify-between shadow-sm hover:border-[#23315d] transition-all">
-        <div>
-          <span className="text-xs text-slate-400 font-medium">Total Processes</span>
-          <div className="text-2xl font-bold text-white tracking-tight mt-1">
-            {numProcesses} Active
+      {cards.map((card, idx) => {
+        const Icon = card.icon;
+
+        return (
+          <div
+            key={idx}
+            className={`glass-panel-secondary rounded-2xl p-4.5 transition-all duration-300 hover:scale-[1.01] hover:border-cyan-500/40 relative overflow-hidden group holo-shimmer ${
+              card.customBorder || ''
+            }`}
+          >
+            {/* Top glass reflection line */}
+            <div className="absolute top-0 left-6 right-6 h-[1px] bg-gradient-to-r from-transparent via-cyan-400/30 to-transparent pointer-events-none" />
+
+            {/* Header row */}
+            <div className="flex items-center justify-between mb-2.5">
+              <span className="text-[11px] font-mono font-medium text-slate-400 tracking-wider">
+                {card.title}
+              </span>
+              <div className="p-1.5 rounded-lg bg-cyan-950/60 border border-cyan-500/30 text-cyan-400 shadow-[0_0_8px_rgba(6,182,212,0.2)]">
+                <Icon className="w-3.5 h-3.5" />
+              </div>
+            </div>
+
+            {/* Main Value */}
+            <div
+              className={`text-xl font-bold font-mono tracking-tight ${
+                card.textColor || 'text-white'
+              }`}
+            >
+              {card.value}
+            </div>
+
+            {/* Subtitle & Badge */}
+            <div className="flex items-center justify-between mt-3 pt-2.5 border-t border-cyan-500/15 gap-2">
+              <span className="text-[11px] font-mono text-slate-400 truncate">
+                {card.sub}
+              </span>
+              <span
+                className={`text-[9px] font-mono font-semibold px-2 py-0.5 rounded-md border shrink-0 ${card.badgeColor}`}
+              >
+                {card.badge}
+              </span>
+            </div>
           </div>
-        </div>
-
-        <div className="mt-3 flex items-center justify-between">
-          <span className="inline-flex items-center text-[11px] font-semibold text-purple-400 bg-purple-950/60 border border-purple-800/60 px-2 py-0.5 rounded-full">
-            P1 – P{numProcesses}
-          </span>
-          {/* Dynamic mini sparkline matching Reference Card 1 */}
-          <svg className="w-24 h-6 text-purple-500 overflow-visible" viewBox="0 0 100 24" fill="none">
-            <path
-              d="M0 18 Q 20 6, 40 14 T 75 8 T 100 2"
-              stroke="#a855f7"
-              strokeWidth="2"
-              strokeLinecap="round"
-            />
-          </svg>
-        </div>
-      </div>
-
-      {/* Card 2: Resource Types (like Daily P/L) */}
-      <div className="bg-[#0a0e22] border border-[#192344] rounded-2xl p-4.5 relative overflow-hidden flex flex-col justify-between shadow-sm hover:border-[#23315d] transition-all">
-        <div>
-          <span className="text-xs text-slate-400 font-medium">Resource Types</span>
-          <div className="text-2xl font-bold text-cyan-400 tracking-tight mt-1">
-            {numResources} Vector Classes
-          </div>
-        </div>
-
-        <div className="mt-3 flex items-center justify-between">
-          <span className="inline-flex items-center text-[11px] font-semibold text-cyan-400 bg-cyan-950/60 border border-cyan-800/60 px-2 py-0.5 rounded-full">
-            R1 – R{numResources}
-          </span>
-          {/* Dynamic mini sparkline matching Reference Card 2 */}
-          <svg className="w-24 h-6 text-cyan-400 overflow-visible" viewBox="0 0 100 24" fill="none">
-            <path
-              d="M0 20 Q 25 18, 45 10 T 80 12 T 100 4"
-              stroke="#06b6d4"
-              strokeWidth="2"
-              strokeLinecap="round"
-            />
-          </svg>
-        </div>
-      </div>
-
-      {/* Card 3: System State (like Unrealized P/L) */}
-      <div className="bg-[#0a0e22] border border-[#192344] rounded-2xl p-4.5 relative overflow-hidden flex flex-col justify-between shadow-sm hover:border-[#23315d] transition-all">
-        <div>
-          <span className="text-xs text-slate-400 font-medium">System State</span>
-          <div className={`text-2xl font-bold tracking-tight mt-1 ${stateInfo.textColor}`}>
-            {stateInfo.title}
-          </div>
-        </div>
-
-        <div className="mt-3 flex items-center justify-between">
-          <span className={`inline-flex items-center text-[11px] font-semibold border px-2 py-0.5 rounded-full ${stateInfo.badgeClass}`}>
-            {stateInfo.badge}
-          </span>
-          {/* Dynamic mini sparkline matching Reference Card 3 */}
-          <svg className="w-24 h-6 overflow-visible" viewBox="0 0 100 24" fill="none">
-            <path
-              d="M0 16 Q 30 22, 55 12 T 85 8 T 100 2"
-              stroke={stateInfo.sparkColor}
-              strokeWidth="2"
-              strokeLinecap="round"
-            />
-          </svg>
-        </div>
-      </div>
-
-      {/* Card 4: Buying Power / Total Capacity */}
-      <div className="bg-[#0a0e22] border border-[#192344] rounded-2xl p-4.5 relative overflow-hidden flex flex-col justify-between shadow-sm hover:border-[#23315d] transition-all">
-        <div>
-          <span className="text-xs text-slate-400 font-medium">Total Capacity</span>
-          <div className="text-2xl font-bold text-white tracking-tight mt-1">
-            {totalInstanceSum} Units
-          </div>
-        </div>
-
-        <div className="mt-3 flex items-center justify-between">
-          <span className="inline-flex items-center text-[11px] font-semibold text-amber-400 bg-amber-950/60 border border-amber-800/60 px-2 py-0.5 rounded-full font-mono">
-            [{totalResources.join(', ')}]
-          </span>
-          {/* Dynamic mini sparkline matching Reference Card 4 */}
-          <svg className="w-24 h-6 text-amber-400 overflow-visible" viewBox="0 0 100 24" fill="none">
-            <path
-              d="M0 22 Q 20 12, 50 16 T 80 6 T 100 3"
-              stroke="#f59e0b"
-              strokeWidth="2"
-              strokeLinecap="round"
-            />
-          </svg>
-        </div>
-      </div>
+        );
+      })}
     </div>
   );
 };

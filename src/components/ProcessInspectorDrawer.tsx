@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, CheckCircle2, Clock, AlertTriangle, Layers, Database, Calculator } from 'lucide-react';
+import { X, CheckCircle2, Clock, AlertTriangle, Layers, Database, Calculator, Cpu } from 'lucide-react';
 import type { ProcessState } from '../types/deadlock';
 
 interface ProcessInspectorDrawerProps {
@@ -41,24 +41,25 @@ export const ProcessInspectorDrawer: React.FC<ProcessInspectorDrawerProps> = ({
     <>
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-[#04060f]/80 backdrop-blur-sm z-50 transition-opacity"
+        className="fixed inset-0 bg-[#02050f]/80 backdrop-blur-md z-50 transition-opacity"
         onClick={onClose}
       />
 
-      {/* Drawer Panel matching Reference */}
-      <div className="fixed top-0 bottom-0 right-0 z-50 w-full sm:w-96 bg-[#070a19] border-l border-[#192344] shadow-2xl flex flex-col transition-transform">
+      {/* Holographic Slide-over Drawer */}
+      <div className="fixed top-0 bottom-0 right-0 z-50 w-full sm:w-96 glass-panel-hud border-l border-cyan-500/25 shadow-[0_0_50px_rgba(6,182,212,0.25)] flex flex-col transition-transform">
         {/* Drawer Header */}
-        <div className="p-4.5 border-b border-[#141d38] flex items-center justify-between bg-[#0a0e22]">
+        <div className="p-4.5 border-b border-cyan-500/15 flex items-center justify-between bg-gradient-to-r from-cyan-950/40 via-transparent to-transparent">
           <div>
-            <h2 className="text-sm font-bold text-white flex items-center gap-2">
-              Process Inspection: {processName}
+            <h2 className="text-sm font-bold text-white flex items-center gap-2 font-mono">
+              <Cpu className="w-4 h-4 text-cyan-400" />
+              INSPECT: {processName}
             </h2>
-            <span className="text-xs text-slate-400">Resource Vectors & Execution Telemetry</span>
+            <span className="text-xs font-mono text-cyan-400/80">Resource Vectors & Feasibility Telemetry</span>
           </div>
 
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg bg-[#0d1228] hover:bg-[#141b38] text-slate-400 hover:text-white transition-colors cursor-pointer border border-[#1d294d]"
+            className="p-1.5 rounded-lg bg-slate-950/60 hover:bg-cyan-950/40 text-slate-400 hover:text-cyan-300 transition-colors cursor-pointer border border-cyan-500/20"
             aria-label="Close Drawer"
           >
             <X className="w-4 h-4" />
@@ -68,83 +69,83 @@ export const ProcessInspectorDrawer: React.FC<ProcessInspectorDrawerProps> = ({
         {/* Drawer Content */}
         <div className="flex-1 p-4.5 space-y-4 overflow-y-auto">
           {/* Status Badge */}
-          <div className="bg-[#0c1126] p-3.5 rounded-xl border border-[#182346] flex items-center justify-between">
+          <div className="glass-panel-secondary p-3.5 rounded-xl border border-cyan-500/20 flex items-center justify-between font-mono">
             <span className="text-xs font-semibold text-slate-400">
-              Execution Status:
+              EXECUTION STATE:
             </span>
             {isDeadlocked ? (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-rose-950/70 text-rose-300 border border-rose-700/60 shadow-sm shadow-rose-950">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-rose-950/70 text-rose-300 border border-rose-500/50 shadow-[0_0_10px_rgba(244,63,94,0.3)]">
                 <AlertTriangle className="w-3.5 h-3.5 text-rose-400" /> Deadlocked
               </span>
             ) : state === 'completed' ? (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-950/70 text-emerald-300 border border-emerald-700/60 shadow-sm shadow-emerald-950">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-950/70 text-emerald-300 border border-emerald-500/50 shadow-[0_0_10px_rgba(16,185,129,0.3)]">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> Done ✓
               </span>
             ) : state === 'active' ? (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-blue-950/70 text-blue-300 border border-blue-600/60 shadow-sm shadow-blue-950">
-                Active
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-cyan-950/70 text-cyan-300 border border-cyan-400/50 shadow-[0_0_10px_rgba(6,182,212,0.3)] animate-pulse">
+                Active Stepper
               </span>
             ) : (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-[#0e142c] text-slate-300 border border-[#202c52]">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-slate-950/80 text-slate-300 border border-cyan-500/20">
                 <Clock className="w-3.5 h-3.5 text-amber-400" /> Waiting
               </span>
             )}
           </div>
 
           {/* Vectors Table */}
-          <div className="space-y-3">
+          <div className="space-y-3 font-mono">
             {/* Allocation */}
-            <div className="bg-[#0c1126] p-3.5 rounded-xl border border-[#182346] space-y-2">
+            <div className="glass-panel-secondary p-3.5 rounded-xl border border-cyan-500/20 space-y-2">
               <div className="flex items-center justify-between text-xs font-bold text-slate-200">
                 <div className="flex items-center gap-2 text-emerald-400">
                   <Database className="w-3.5 h-3.5" />
-                  <span>Allocation (Currently Held)</span>
+                  <span>Allocation (Held)</span>
                 </div>
-                <span className="text-emerald-400 font-mono font-bold">[{allocation.join(', ')}]</span>
+                <span className="text-emerald-400 font-bold">[{allocation.join(', ')}]</span>
               </div>
               <div className="grid grid-cols-3 sm:grid-cols-6 gap-1.5 pt-1">
                 {Array.from({ length: numResources }).map((_, rIdx) => (
-                  <div key={rIdx} className="bg-[#080c1c] p-1.5 rounded-lg text-center border border-[#182346]">
+                  <div key={rIdx} className="bg-slate-950/70 p-1.5 rounded-lg text-center border border-cyan-500/15">
                     <span className="text-[10px] text-slate-400 block">R{rIdx + 1}</span>
-                    <span className="text-xs font-bold text-emerald-300 font-mono">{allocation[rIdx] ?? 0}</span>
+                    <span className="text-xs font-bold text-emerald-300">{allocation[rIdx] ?? 0}</span>
                   </div>
                 ))}
               </div>
             </div>
 
             {/* Maximum Demand */}
-            <div className="bg-[#0c1126] p-3.5 rounded-xl border border-[#182346] space-y-2">
+            <div className="glass-panel-secondary p-3.5 rounded-xl border border-cyan-500/20 space-y-2">
               <div className="flex items-center justify-between text-xs font-bold text-slate-200">
                 <div className="flex items-center gap-2 text-amber-400">
                   <Layers className="w-3.5 h-3.5" />
-                  <span>Max Declared Demand</span>
+                  <span>Max Declared</span>
                 </div>
-                <span className="text-amber-400 font-mono font-bold">[{maxDemand.join(', ')}]</span>
+                <span className="text-amber-400 font-bold">[{maxDemand.join(', ')}]</span>
               </div>
               <div className="grid grid-cols-3 sm:grid-cols-6 gap-1.5 pt-1">
                 {Array.from({ length: numResources }).map((_, rIdx) => (
-                  <div key={rIdx} className="bg-[#080c1c] p-1.5 rounded-lg text-center border border-[#182346]">
+                  <div key={rIdx} className="bg-slate-950/70 p-1.5 rounded-lg text-center border border-cyan-500/15">
                     <span className="text-[10px] text-slate-400 block">R{rIdx + 1}</span>
-                    <span className="text-xs font-bold text-amber-300 font-mono">{maxDemand[rIdx] ?? 0}</span>
+                    <span className="text-xs font-bold text-amber-300">{maxDemand[rIdx] ?? 0}</span>
                   </div>
                 ))}
               </div>
             </div>
 
             {/* Need Vector */}
-            <div className="bg-[#0c1126] p-3.5 rounded-xl border border-[#182346] space-y-2">
+            <div className="glass-panel-secondary p-3.5 rounded-xl border border-cyan-500/20 space-y-2">
               <div className="flex items-center justify-between text-xs font-bold text-slate-200">
                 <div className="flex items-center gap-2 text-cyan-400">
                   <Calculator className="w-3.5 h-3.5" />
-                  <span>Remaining Need (Max − Alloc)</span>
+                  <span>Remaining Need</span>
                 </div>
-                <span className="text-cyan-400 font-mono font-bold">[{need.join(', ')}]</span>
+                <span className="text-cyan-400 font-bold">[{need.join(', ')}]</span>
               </div>
               <div className="grid grid-cols-3 sm:grid-cols-6 gap-1.5 pt-1">
                 {Array.from({ length: numResources }).map((_, rIdx) => (
-                  <div key={rIdx} className="bg-[#080c1c] p-1.5 rounded-lg text-center border border-[#182346]">
+                  <div key={rIdx} className="bg-slate-950/70 p-1.5 rounded-lg text-center border border-cyan-500/15">
                     <span className="text-[10px] text-slate-400 block">R{rIdx + 1}</span>
-                    <span className="text-xs font-bold text-cyan-300 font-mono">{need[rIdx] ?? 0}</span>
+                    <span className="text-xs font-bold text-cyan-300">{need[rIdx] ?? 0}</span>
                   </div>
                 ))}
               </div>
@@ -152,18 +153,18 @@ export const ProcessInspectorDrawer: React.FC<ProcessInspectorDrawerProps> = ({
           </div>
 
           {/* Current Feasibility Reason */}
-          <div className="bg-[#0c1126] p-3.5 rounded-xl border border-[#182346] space-y-2">
-            <div className="text-xs font-semibold text-slate-300">
-              State Feasibility Analysis:
+          <div className="glass-panel-secondary p-3.5 rounded-xl border border-cyan-500/20 space-y-2 font-mono">
+            <div className="text-xs font-semibold text-cyan-300">
+              STATE FEASIBILITY ANALYSIS:
             </div>
 
             {state === 'completed' ? (
               <p className="text-xs text-emerald-300 leading-relaxed">
-                Process {processName} has finished execution and returned all held resources to the available pool.
+                Process {processName} has finished execution and released all held resources to the available pool.
               </p>
             ) : canCurrentlyExecute ? (
-              <p className="text-xs text-blue-300 leading-relaxed">
-                Process {processName} satisfies <span className="font-bold">Need ≤ Available</span> ([{need.join(', ')}] ≤ [{available.join(', ')}]) and is eligible to execute.
+              <p className="text-xs text-cyan-200 leading-relaxed">
+                Process {processName} satisfies <span className="font-bold">Need ≤ Available</span> ([{need.join(', ')}] ≤ [{available.join(', ')}]) and is eligible to execute immediately.
               </p>
             ) : (
               <p className="text-xs text-amber-300 leading-relaxed">
@@ -177,10 +178,10 @@ export const ProcessInspectorDrawer: React.FC<ProcessInspectorDrawerProps> = ({
         </div>
 
         {/* Drawer Footer */}
-        <div className="p-4 border-t border-[#141d38] bg-[#0a0e22]">
+        <div className="p-4 border-t border-cyan-500/15 bg-slate-950/60 font-mono">
           <button
             onClick={onClose}
-            className="w-full py-2 bg-[#0e142c] hover:bg-[#162044] text-slate-300 text-xs font-semibold rounded-xl border border-[#202c52] transition-colors cursor-pointer"
+            className="w-full py-2 bg-slate-950/80 hover:bg-cyan-950/40 text-cyan-300 hover:text-cyan-200 text-xs font-semibold rounded-xl border border-cyan-500/25 transition-colors cursor-pointer"
           >
             Close Inspector
           </button>

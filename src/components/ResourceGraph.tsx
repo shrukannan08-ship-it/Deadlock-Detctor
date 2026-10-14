@@ -32,7 +32,7 @@ export const ResourceGraph: React.FC<ResourceGraphProps> = ({
 
   const normalizedQuery = searchQuery.trim().toLowerCase();
 
-  // Layout: Left column for Processes, Right column for Resources
+  // Spatial layout: Process Nodes Left, Resource Nodes Right
   const processX = 130;
   const resourceX = 490;
 
@@ -135,43 +135,37 @@ export const ResourceGraph: React.FC<ResourceGraphProps> = ({
   const isDeadlockActive = deadlockedProcesses.length > 0;
 
   return (
-    <div className="bg-[#0a0e22] border border-[#192344] rounded-2xl p-5 flex flex-col h-full shadow-sm hover:border-[#202e58] transition-all">
-      {/* Header matching Reference Chart Toolbar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-[#141d38] mb-3.5 gap-2.5">
+    <div className="glass-panel-primary rounded-2xl p-5 flex flex-col h-full hover:border-cyan-500/35 transition-all holo-shimmer">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-cyan-500/15 mb-3.5 gap-2.5">
         <div className="flex items-center gap-2.5 text-white font-bold text-sm tracking-wide">
-          <div className="p-1.5 rounded-lg bg-blue-500/10 border border-blue-500/30 text-blue-400">
+          <div className="p-1.5 rounded-lg bg-cyan-950/70 border border-cyan-500/40 text-cyan-400 shadow-[0_0_10px_rgba(6,182,212,0.25)]">
             <Network className="w-4 h-4" />
           </div>
-          <span>Resource Allocation Graph (RAG)</span>
+          <span className="font-sans">Holographic Resource Allocation Graph (RAG)</span>
         </div>
-        
+
         {isDeadlockActive ? (
-          <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-rose-950/70 border border-rose-500/60 text-rose-300 text-xs font-semibold shadow-sm shadow-rose-950">
+          <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-rose-950/70 border border-rose-500/50 text-rose-300 text-xs font-mono font-semibold shadow-[0_0_12px_rgba(244,63,94,0.3)]">
             <AlertTriangle className="w-3.5 h-3.5 text-rose-400" />
-            <span>Circular Wait Detected ({deadlockedProcesses.join(', ')})</span>
+            <span>Cycle Detected ({deadlockedProcesses.join(', ')})</span>
           </div>
         ) : safeSequence.length > 0 ? (
-          <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-950/70 border border-emerald-500/60 text-emerald-300 text-xs font-semibold shadow-sm shadow-emerald-950">
+          <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-950/70 border border-emerald-500/50 text-emerald-300 text-xs font-mono font-semibold shadow-[0_0_12px_rgba(16,185,129,0.3)]">
             <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
             <span>Optimal Safe State Flow</span>
           </div>
         ) : (
-          <span className="text-xs text-slate-400 bg-[#0d1228] px-3 py-1 rounded-full border border-[#1d294d]">
+          <span className="text-xs font-mono text-cyan-400/80 bg-cyan-950/40 px-3 py-1 rounded-full border border-cyan-500/25">
             Live Dependency Flow
           </span>
         )}
       </div>
 
-      {/* SVG Canvas styled like the Reference Dark Financial Chart */}
-      <div className="relative flex-1 bg-[#070a1a] rounded-xl border border-[#182348] p-2 overflow-hidden flex items-center justify-center min-h-[360px]">
-        {/* Subtle trading grid pattern */}
-        <div 
-          className="absolute inset-0 opacity-20 pointer-events-none"
-          style={{
-            backgroundImage: 'radial-gradient(#253358 1px, transparent 1px)',
-            backgroundSize: '24px 24px',
-          }}
-        />
+      {/* SVG Canvas with Holographic Glow & Glass Substrate */}
+      <div className="relative flex-1 bg-[#02050f]/80 rounded-xl border border-cyan-500/20 p-2 overflow-hidden flex items-center justify-center min-h-[360px] shadow-inner">
+        {/* Subtle cyan technical grid pattern */}
+        <div className="absolute inset-0 os-grid-bg opacity-40 pointer-events-none" />
 
         <svg
           viewBox={`0 0 ${svgWidth} ${svgHeight}`}
@@ -204,7 +198,7 @@ export const ResourceGraph: React.FC<ResourceGraphProps> = ({
             </marker>
 
             <marker
-              id="rag-arrow-req-amber"
+              id="rag-arrow-req-cyan"
               viewBox="0 0 10 10"
               refX="30"
               refY="5"
@@ -212,7 +206,7 @@ export const ResourceGraph: React.FC<ResourceGraphProps> = ({
               markerHeight="6"
               orient="auto-start-reverse"
             >
-              <path d="M 0 1 L 10 5 L 0 9 z" fill="#f59e0b" />
+              <path d="M 0 1 L 10 5 L 0 9 z" fill="#22d3ee" />
             </marker>
 
             <marker
@@ -227,26 +221,36 @@ export const ResourceGraph: React.FC<ResourceGraphProps> = ({
               <path d="M 0 1 L 10 5 L 0 9 z" fill="#f43f5e" />
             </marker>
 
-            {/* Depth Gradients matching Reference terminal */}
+            {/* Depth Hologram Gradients */}
             <radialGradient id="proc-gradient" cx="35%" cy="35%" r="65%">
-              <stop offset="0%" stopColor="#3b82f6" />
-              <stop offset="100%" stopColor="#1e1b4b" />
+              <stop offset="0%" stopColor="#0ea5e9" />
+              <stop offset="60%" stopColor="#0369a1" />
+              <stop offset="100%" stopColor="#020617" />
             </radialGradient>
 
             <radialGradient id="proc-gradient-deadlock" cx="35%" cy="35%" r="65%">
-              <stop offset="0%" stopColor="#e11d48" />
+              <stop offset="0%" stopColor="#fb7185" />
+              <stop offset="60%" stopColor="#be123c" />
               <stop offset="100%" stopColor="#4c0519" />
             </radialGradient>
 
             <radialGradient id="proc-gradient-safe" cx="35%" cy="35%" r="65%">
-              <stop offset="0%" stopColor="#10b981" />
-              <stop offset="100%" stopColor="#064e3b" />
+              <stop offset="0%" stopColor="#34d399" />
+              <stop offset="60%" stopColor="#047857" />
+              <stop offset="100%" stopColor="#022c22" />
             </radialGradient>
 
             <linearGradient id="res-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#0284c7" />
+              <stop offset="0%" stopColor="#0891b2" />
+              <stop offset="60%" stopColor="#0e7490" />
               <stop offset="100%" stopColor="#082f49" />
             </linearGradient>
+
+            {/* Filter for neon glow on active nodes */}
+            <filter id="neon-glow" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="3" result="blur" />
+              <feComposite in="SourceGraphic" in2="blur" operator="over" />
+            </filter>
           </defs>
 
           {/* Allocation Edges: Resource -> Process */}
@@ -261,7 +265,7 @@ export const ResourceGraph: React.FC<ResourceGraphProps> = ({
                 markerEnd={`url(#rag-arrow-alloc-${edge.isDeadlocked ? 'red' : 'green'})`}
               />
               {/* Particle flow */}
-              <circle r={3} fill={edge.isDeadlocked ? '#f43f5e' : '#34d399'}>
+              <circle r={3.5} fill={edge.isDeadlocked ? '#f43f5e' : '#34d399'}>
                 <animateMotion
                   path={edge.pathData}
                   dur="2.5s"
@@ -271,12 +275,12 @@ export const ResourceGraph: React.FC<ResourceGraphProps> = ({
               {/* Weight badge */}
               <g transform={`translate(${edge.midX}, ${edge.midY})`}>
                 <rect
-                  x="-9"
-                  y="-8"
-                  width="18"
-                  height="16"
-                  rx="4"
-                  fill="#080c1c"
+                  x="-10"
+                  y="-9"
+                  width="20"
+                  height="18"
+                  rx="5"
+                  fill="#030714"
                   stroke={edge.isDeadlocked ? '#f43f5e' : '#10b981'}
                   strokeWidth="1"
                 />
@@ -300,14 +304,14 @@ export const ResourceGraph: React.FC<ResourceGraphProps> = ({
               <path
                 d={edge.pathData}
                 fill="none"
-                stroke={edge.isDeadlocked ? '#f43f5e' : '#f59e0b'}
+                stroke={edge.isDeadlocked ? '#f43f5e' : '#22d3ee'}
                 strokeWidth={edge.isDeadlocked ? 2.5 : 2}
                 strokeDasharray="5 3"
                 strokeOpacity={0.85}
-                markerEnd={`url(#rag-arrow-req-${edge.isDeadlocked ? 'red' : 'amber'})`}
+                markerEnd={`url(#rag-arrow-req-${edge.isDeadlocked ? 'red' : 'cyan'})`}
               />
               {/* Particle flow */}
-              <circle r={3} fill={edge.isDeadlocked ? '#f43f5e' : '#fbbf24'}>
+              <circle r={3.5} fill={edge.isDeadlocked ? '#f43f5e' : '#67e8f9'}>
                 <animateMotion
                   path={edge.pathData}
                   dur="2s"
@@ -317,13 +321,13 @@ export const ResourceGraph: React.FC<ResourceGraphProps> = ({
               {/* Weight badge */}
               <g transform={`translate(${edge.midX}, ${edge.midY})`}>
                 <rect
-                  x="-9"
-                  y="-8"
-                  width="18"
-                  height="16"
-                  rx="4"
-                  fill="#080c1c"
-                  stroke={edge.isDeadlocked ? '#f43f5e' : '#f59e0b'}
+                  x="-10"
+                  y="-9"
+                  width="20"
+                  height="18"
+                  rx="5"
+                  fill="#030714"
+                  stroke={edge.isDeadlocked ? '#f43f5e' : '#22d3ee'}
                   strokeWidth="1"
                 />
                 <text
@@ -354,14 +358,14 @@ export const ResourceGraph: React.FC<ResourceGraphProps> = ({
                 key={node.name}
                 transform={`translate(${node.x}, ${node.y})`}
                 onClick={() => onSelectProcess?.(node.name)}
-                className="cursor-pointer transition-transform hover:scale-105"
+                className="cursor-pointer transition-transform hover:scale-110"
               >
                 {/* Search highlight ring */}
                 {isMatched && (
                   <circle
                     r={26}
                     fill="none"
-                    stroke="#38bdf8"
+                    stroke="#22d3ee"
                     strokeWidth={2}
                     strokeDasharray="4 2"
                   />
@@ -378,14 +382,15 @@ export const ResourceGraph: React.FC<ResourceGraphProps> = ({
                   }
                   stroke={
                     isMatched
-                      ? '#38bdf8'
+                      ? '#22d3ee'
                       : isDeadlocked
                       ? '#f43f5e'
                       : orderIndex !== -1
                       ? '#10b981'
-                      : '#3b82f6'
+                      : '#0ea5e9'
                   }
                   strokeWidth={isMatched ? 2.5 : isDeadlocked ? 2.5 : 2}
+                  filter="url(#neon-glow)"
                 />
                 <text
                   textAnchor="middle"
@@ -431,6 +436,7 @@ export const ResourceGraph: React.FC<ResourceGraphProps> = ({
               <g
                 key={node.name}
                 transform={`translate(${node.x}, ${node.y})`}
+                className="transition-transform hover:scale-105"
               >
                 {/* Search highlight ring */}
                 {isMatched && (
@@ -441,7 +447,7 @@ export const ResourceGraph: React.FC<ResourceGraphProps> = ({
                     height={48}
                     rx={8}
                     fill="none"
-                    stroke="#38bdf8"
+                    stroke="#22d3ee"
                     strokeWidth={2}
                     strokeDasharray="4 2"
                   />
@@ -454,8 +460,9 @@ export const ResourceGraph: React.FC<ResourceGraphProps> = ({
                   height={38}
                   rx={8}
                   fill="url(#res-gradient)"
-                  stroke={isMatched ? '#38bdf8' : '#0284c7'}
+                  stroke={isMatched ? '#22d3ee' : '#0891b2'}
                   strokeWidth={isMatched ? 2.5 : 2}
+                  filter="url(#neon-glow)"
                 />
                 <text
                   x={0}
@@ -472,7 +479,7 @@ export const ResourceGraph: React.FC<ResourceGraphProps> = ({
                   x={0}
                   y={9}
                   textAnchor="middle"
-                  fill="#7dd3fc"
+                  fill="#a5f3fc"
                   fontSize="9"
                   fontFamily="monospace"
                   fontWeight="semibold"
@@ -485,23 +492,23 @@ export const ResourceGraph: React.FC<ResourceGraphProps> = ({
         </svg>
       </div>
 
-      {/* Graph Legend matching Reference chart details */}
-      <div className="mt-3.5 pt-3 border-t border-[#141d38] grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs text-slate-400">
+      {/* Graph Legend */}
+      <div className="mt-3.5 pt-3 border-t border-cyan-500/15 grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs font-mono text-slate-400">
         <div className="flex items-center gap-2">
-          <span className="w-3 h-3 rounded-full bg-blue-600 border border-blue-400 inline-block"></span>
+          <span className="w-3 h-3 rounded-full bg-sky-500 border border-sky-300 inline-block shadow-[0_0_6px_#0ea5e9]"></span>
           <span>Process Node (P)</span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="w-3 h-3 rounded-md bg-cyan-600 border border-cyan-400 inline-block"></span>
+          <span className="w-3 h-3 rounded-md bg-cyan-600 border border-cyan-400 inline-block shadow-[0_0_6px_#06b6d4]"></span>
           <span>Resource Node (R)</span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="w-4 h-0.5 bg-emerald-400 inline-block"></span>
+          <span className="w-4 h-0.5 bg-emerald-400 inline-block shadow-[0_0_6px_#34d399]"></span>
           <span className="text-emerald-300">Allocated (R→P)</span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="w-4 h-0.5 border-t border-dashed border-amber-400 inline-block"></span>
-          <span className="text-amber-300">Requested (P→R)</span>
+          <span className="w-4 h-0.5 border-t border-dashed border-cyan-400 inline-block shadow-[0_0_6px_#22d3ee]"></span>
+          <span className="text-cyan-300">Requested (P→R)</span>
         </div>
       </div>
     </div>

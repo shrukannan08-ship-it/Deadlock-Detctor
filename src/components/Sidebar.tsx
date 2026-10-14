@@ -8,8 +8,8 @@ import {
   BarChart3,
   Send,
   X,
-  Zap,
   ArrowRight,
+  Cpu,
 } from 'lucide-react';
 import type { SimulationStatus } from '../types/deadlock';
 
@@ -42,13 +42,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
   numResources,
 }) => {
   const navItems = [
-    { id: 'overview' as NavSection, label: 'Dashboard', icon: LayoutDashboard },
+    { id: 'overview' as NavSection, label: 'Kernel Overview', icon: LayoutDashboard },
     { id: 'simulation' as NavSection, label: 'Simulation Setup', icon: Sliders },
-    { id: 'trace' as NavSection, label: 'Real-Time Simulator', icon: Activity },
+    { id: 'trace' as NavSection, label: 'Real-Time Stepper', icon: Activity },
     { id: 'matrices' as NavSection, label: 'Matrices Workspace', icon: Table },
     { id: 'resources' as NavSection, label: 'Resources Monitor', icon: Layers },
-    { id: 'analytics' as NavSection, label: 'Graph & Analytics', icon: BarChart3 },
-    { id: 'request' as NavSection, label: 'Resource Request', icon: Send },
+    { id: 'analytics' as NavSection, label: 'RAG Graph & Analytics', icon: BarChart3 },
+    { id: 'request' as NavSection, label: 'Resource Prevention', icon: Send },
   ];
 
   return (
@@ -56,41 +56,42 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* Mobile backdrop */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-[#04060f]/80 backdrop-blur-sm z-40 lg:hidden"
+          className="fixed inset-0 bg-[#030712]/80 backdrop-blur-md z-40 lg:hidden"
           onClick={onClose}
         />
       )}
 
       <aside
-        className={`fixed top-0 bottom-0 left-0 z-50 w-64 bg-[#070a19] border-r border-[#151e3a] flex flex-col transition-transform duration-200 ease-in-out lg:translate-x-0 ${
+        className={`fixed top-0 bottom-0 left-0 z-50 w-64 glass-panel-primary border-r border-cyan-500/20 flex flex-col transition-transform duration-200 ease-in-out lg:translate-x-0 ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
-        {/* Brand Header matching Reference Logo */}
-        <div className="p-4 border-b border-[#141d38] flex items-center justify-between">
+        {/* Brand Header matching Reference Holographic Logo */}
+        <div className="p-4 border-b border-cyan-500/15 flex items-center justify-between bg-gradient-to-r from-cyan-950/30 to-transparent">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 flex items-center justify-center text-white shadow-lg shadow-indigo-900/40">
-              <span className="font-extrabold text-sm tracking-wider">N</span>
+            <div className="relative w-8 h-8 rounded-xl bg-gradient-to-tr from-cyan-600 via-sky-600 to-blue-700 flex items-center justify-center text-white shadow-[0_0_15px_rgba(6,182,212,0.4)] border border-cyan-300/40">
+              <span className="font-extrabold text-sm tracking-wider font-mono">Æ</span>
+              <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-cyan-400 animate-ping opacity-75" />
             </div>
             <div>
               <div className="text-sm font-bold tracking-wider text-white flex items-center gap-1.5 font-sans">
-                NEXUS OS
+                AETHER OS
               </div>
-              <div className="text-[10px] text-slate-400 font-medium tracking-tight">
-                RESOURCE TERMINAL
+              <div className="text-[10px] text-cyan-400/80 font-mono tracking-tight font-medium">
+                CONCURRENCY KERNEL
               </div>
             </div>
           </div>
 
           <button
             onClick={onClose}
-            className="p-1.5 text-slate-400 hover:text-white lg:hidden cursor-pointer rounded-lg hover:bg-[#121935]"
+            className="p-1.5 text-slate-400 hover:text-cyan-300 lg:hidden cursor-pointer rounded-lg hover:bg-cyan-950/40"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
-        {/* Navigation Items with Gradient Active State matching Reference */}
+        {/* Navigation Items with Holographic Active State */}
         <nav className="flex-1 p-3 space-y-1.5 overflow-y-auto">
           {navItems.map((item) => {
             const Icon = item.icon;
@@ -103,62 +104,75 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   onSelectSection(item.id);
                   onClose();
                 }}
-                className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all cursor-pointer text-left ${
+                className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs transition-all cursor-pointer text-left font-mono group ${
                   isActive
-                    ? 'bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white font-semibold shadow-lg shadow-indigo-950/60'
-                    : 'text-slate-400 hover:text-white hover:bg-[#10162e]'
+                    ? 'bg-gradient-to-r from-cyan-500/20 via-sky-500/15 to-transparent text-cyan-200 font-semibold border border-cyan-400/40 shadow-[0_0_15px_rgba(6,182,212,0.25)]'
+                    : 'text-slate-400 hover:text-cyan-200 hover:bg-slate-900/40 border border-transparent hover:border-cyan-500/20'
                 }`}
               >
                 <Icon
-                  className={`w-4 h-4 shrink-0 ${
-                    isActive ? 'text-white' : 'text-slate-400'
+                  className={`w-4 h-4 shrink-0 transition-transform group-hover:scale-110 ${
+                    isActive ? 'text-cyan-400' : 'text-slate-400'
                   }`}
                 />
                 <span className="truncate">{item.label}</span>
+                {isActive && (
+                  <span className="ml-auto w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_6px_#22d3ee]" />
+                )}
               </button>
             );
           })}
         </nav>
 
-        {/* Bottom NEXUS PRO / ALGORITHM ENGINE Promo Card matching Reference */}
-        <div className="p-3 border-t border-[#141d38] bg-[#060814] space-y-3">
-          <div className="p-3.5 rounded-xl bg-gradient-to-br from-[#121332] to-[#0a0d1e] border border-indigo-900/40 relative overflow-hidden shadow-md">
+        {/* Bottom OS Core Engine Promo & Telemetry Card */}
+        <div className="p-3 border-t border-cyan-500/15 bg-slate-950/50 space-y-3">
+          <div className="p-3.5 rounded-xl glass-panel-secondary border border-cyan-500/25 relative overflow-hidden shadow-md">
             <div className="flex items-start gap-2.5">
-              <div className="w-6 h-6 rounded-lg bg-gradient-to-tr from-purple-600 to-indigo-500 flex items-center justify-center text-white shrink-0 shadow-sm shadow-purple-900/50">
-                <Zap className="w-3.5 h-3.5" />
+              <div className="w-6 h-6 rounded-lg bg-cyan-950/80 border border-cyan-500/40 flex items-center justify-center text-cyan-400 shrink-0 shadow-[0_0_8px_rgba(6,182,212,0.3)]">
+                <Cpu className="w-3.5 h-3.5" />
               </div>
               <div>
-                <div className="text-xs font-bold text-white tracking-wide">
-                  NEXUS PRO
+                <div className="text-xs font-bold text-white tracking-wide font-mono">
+                  ENGINE TELEMETRY
                 </div>
-                <div className="text-[10px] text-slate-400 mt-0.5 leading-snug">
-                  Active Banker's engine: {numProcesses} Processes • {numResources} Resources
+                <div className="text-[10px] text-cyan-300/80 mt-0.5 leading-snug font-mono">
+                  Banker & Deadlock • {numProcesses} Proc / {numResources} Res
                 </div>
               </div>
             </div>
 
             <button
               onClick={() => onSelectSection('simulation')}
-              className="mt-3 w-full py-1.5 px-3 rounded-lg bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-[11px] font-semibold flex items-center justify-center gap-1.5 shadow-sm shadow-purple-950 hover:brightness-110 transition-all cursor-pointer"
+              className="mt-3 w-full py-1.5 px-3 rounded-lg bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-400/40 text-[11px] font-mono font-semibold flex items-center justify-center gap-1.5 shadow-[0_0_10px_rgba(6,182,212,0.15)] hover:shadow-[0_0_15px_rgba(6,182,212,0.3)] transition-all cursor-pointer"
             >
-              <span>Setup Terminal</span>
+              <span>Reconfigure Vectors</span>
               <ArrowRight className="w-3 h-3" />
             </button>
           </div>
 
-          {/* Engine Status indicator matching Reference Market Open tag */}
-          <div className="flex items-center justify-between px-2 text-[11px] text-slate-400 font-medium">
+          {/* Engine Status indicator matching Reference */}
+          <div className="flex items-center justify-between px-2 text-[11px] text-slate-400 font-mono font-medium">
             <div className="flex items-center gap-2">
-              <span className={`w-2 h-2 rounded-full ${
-                status === 'safe'
-                  ? 'bg-emerald-400 shadow-sm shadow-emerald-400'
-                  : status === 'deadlocked' || status === 'unsafe'
-                  ? 'bg-rose-500 shadow-sm shadow-rose-500'
-                  : 'bg-emerald-400'
-              }`} />
-              <span>{status === 'deadlocked' ? 'Deadlock Detected' : 'Terminal Online'}</span>
+              <span
+                className={`w-2 h-2 rounded-full ${
+                  status === 'safe'
+                    ? 'bg-emerald-400 shadow-[0_0_8px_#34d399]'
+                    : status === 'deadlocked' || status === 'unsafe'
+                    ? 'bg-rose-500 shadow-[0_0_8px_#f43f5e]'
+                    : status === 'running'
+                    ? 'bg-cyan-400 shadow-[0_0_8px_#22d3ee] animate-pulse'
+                    : 'bg-cyan-400 shadow-[0_0_6px_#22d3ee]'
+                }`}
+              />
+              <span className="text-cyan-300/90 truncate">
+                {status === 'deadlocked'
+                  ? 'Deadlock Detected'
+                  : status === 'safe'
+                  ? 'Safe Sequence Active'
+                  : 'Kernel Online'}
+              </span>
             </div>
-            <span className="text-[10px] text-slate-400 font-mono">v2.4</span>
+            <span className="text-[10px] text-slate-500 font-mono">v3.2</span>
           </div>
         </div>
       </aside>

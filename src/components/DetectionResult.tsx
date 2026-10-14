@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShieldAlert, CheckCircle2 } from 'lucide-react';
+import { ShieldAlert, CheckCircle2, AlertOctagon } from 'lucide-react';
 import type { DetectionResultData } from '../types/deadlock';
 
 interface DetectionResultProps {
@@ -8,39 +8,39 @@ interface DetectionResultProps {
 
 export const DetectionResult: React.FC<DetectionResultProps> = ({ result }) => {
   return (
-    <div className="bg-[#0a0e22] border border-[#192344] rounded-2xl p-5 space-y-4 shadow-sm hover:border-[#202e58] transition-all">
-      {/* Card Header matching Reference */}
-      <div className="flex items-center justify-between pb-3 border-b border-[#141d38]">
+    <div className="glass-panel-primary rounded-2xl p-5 space-y-4 hover:border-cyan-500/35 transition-all holo-shimmer">
+      {/* Card Header */}
+      <div className="flex items-center justify-between pb-3 border-b border-cyan-500/15">
         <div className="flex items-center gap-2.5 text-white font-bold text-sm tracking-wide">
-          <div className="p-1.5 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-400">
+          <div className="p-1.5 rounded-lg bg-rose-950/70 border border-rose-500/40 text-rose-400 shadow-[0_0_10px_rgba(244,63,94,0.25)]">
             <ShieldAlert className="w-4 h-4" />
           </div>
-          <span>Deadlock Detection Verification</span>
+          <span className="font-sans">Deadlock Verification Analysis</span>
         </div>
         {result && (
-          <span className="text-xs text-slate-400 font-medium">
-            {result.isDeadlocked ? 'Circular Wait Detected' : 'All Clear • No Cycles'}
+          <span className="text-xs font-mono text-cyan-400/90">
+            {result.isDeadlocked ? 'CIRCULAR WAIT DETECTED' : 'CYCLE-FREE KERNEL'}
           </span>
         )}
       </div>
 
       {!result ? (
-        <div className="p-6 text-center text-slate-400 text-xs border border-dashed border-[#1d294d] rounded-xl bg-[#0c1126]">
+        <div className="p-6 text-center text-slate-400 text-xs font-mono border border-dashed border-cyan-500/20 rounded-xl bg-slate-950/30">
           Click "Detect Deadlock" to evaluate resource allocation and request dependencies.
         </div>
       ) : result.isDeadlocked ? (
         <div className="space-y-3">
           {/* Deadlock banner */}
-          <div className="p-4 rounded-xl bg-rose-950/40 border border-rose-600/50">
-            <div className="flex items-center gap-2 text-sm font-bold text-rose-300">
-              <ShieldAlert className="w-4 h-4 text-rose-400 shrink-0" />
-              <span>DEADLOCK DETECTED</span>
+          <div className="p-4 rounded-xl bg-rose-950/40 border border-rose-500/50 shadow-[0_0_20px_rgba(244,63,94,0.15)]">
+            <div className="flex items-center gap-2 text-sm font-bold font-mono text-rose-300">
+              <AlertOctagon className="w-4 h-4 text-rose-400 shrink-0" />
+              <span>DEADLOCK CYCLE DETECTED</span>
             </div>
 
-            <div className="mt-2.5 space-y-1.5 text-xs">
+            <div className="mt-2.5 space-y-1.5 text-xs font-mono">
               <div>
                 <span className="text-slate-300">Deadlocked processes: </span>
-                <span className="font-bold text-rose-300 bg-rose-950/80 px-2 py-0.5 rounded-md border border-rose-700/60 font-mono">
+                <span className="font-bold text-rose-300 bg-rose-950/80 px-2 py-0.5 rounded-md border border-rose-600/60 font-mono shadow-[0_0_8px_rgba(244,63,94,0.2)]">
                   {result.deadlockedProcesses.join(', ')}
                 </span>
               </div>
@@ -48,78 +48,31 @@ export const DetectionResult: React.FC<DetectionResultProps> = ({ result }) => {
               {result.involvedResources && result.involvedResources.length > 0 && (
                 <div>
                   <span className="text-slate-300">Involved resources: </span>
-                  <span className="font-medium text-slate-200 bg-[#0d1228] px-2 py-0.5 rounded-md border border-[#1e2a50] font-mono">
+                  <span className="font-medium text-cyan-200 bg-cyan-950/60 px-2 py-0.5 rounded-md border border-cyan-500/30 font-mono">
                     {result.involvedResources.join(', ')}
                   </span>
                 </div>
               )}
             </div>
 
-            <p className="text-xs text-rose-300/90 mt-2 leading-relaxed">
-              Circular wait detected. These processes cannot acquire requested resources and are permanently blocked in a dependency loop.
+            <p className="text-xs text-rose-300/90 mt-2.5 leading-relaxed font-mono">
+              Circular wait detected. These processes cannot acquire requested resources and are permanently blocked in an unresolved dependency cycle.
             </p>
           </div>
-
-          {/* Execution Trace if any processes could run before deadlocking */}
-          {result.steps.length > 0 && (
-            <div className="space-y-2 pt-1">
-              <div className="text-xs font-bold text-slate-300">
-                Execution Sequence Trace:
-              </div>
-              <div className="space-y-2 max-h-52 overflow-y-auto pr-1">
-                {result.steps.map((step) => (
-                  <div
-                    key={step.stepNumber}
-                    className="p-3 rounded-xl bg-[#0c1126] border border-[#182346] text-xs space-y-1"
-                  >
-                    <div className="text-emerald-400 font-bold">
-                      Step {step.stepNumber}: {step.process}
-                    </div>
-                    <p className="text-slate-300 text-xs leading-relaxed">
-                      {step.description}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
         </div>
       ) : (
         <div className="space-y-3">
           {/* Safe banner */}
-          <div className="p-4 rounded-xl bg-emerald-950/40 border border-emerald-600/50">
-            <div className="flex items-center gap-2 text-sm font-bold text-emerald-300">
+          <div className="p-4 rounded-xl bg-emerald-950/40 border border-emerald-500/50 shadow-[0_0_20px_rgba(16,185,129,0.15)]">
+            <div className="flex items-center gap-2 text-sm font-bold font-mono text-emerald-300">
               <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-              <span>SAFE — NO DEADLOCK DETECTED</span>
+              <span>NO DEADLOCK DETECTED</span>
             </div>
-            <p className="text-xs text-emerald-300/90 mt-1.5 leading-relaxed">
-              All processes ({result.resolvedProcesses.join(', ')}) can acquire requested resources and terminate successfully without mutual blocking.
+
+            <p className="text-xs text-emerald-200/90 mt-2 leading-relaxed font-mono">
+              All processes can resolve their pending requests without causing a circular wait. The resource graph contains no unresolvable knots.
             </p>
           </div>
-
-          {/* Execution Sequence Trace */}
-          {result.steps.length > 0 && (
-            <div className="space-y-2 pt-1">
-              <div className="text-xs font-bold text-slate-300">
-                Execution Sequence Trace:
-              </div>
-              <div className="space-y-2 max-h-52 overflow-y-auto pr-1">
-                {result.steps.map((step) => (
-                  <div
-                    key={step.stepNumber}
-                    className="p-3 rounded-xl bg-[#0c1126] border border-[#182346] text-xs space-y-1"
-                  >
-                    <div className="text-emerald-400 font-bold">
-                      Step {step.stepNumber}: {step.process}
-                    </div>
-                    <p className="text-slate-300 text-xs leading-relaxed">
-                      {step.description}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
         </div>
       )}
     </div>

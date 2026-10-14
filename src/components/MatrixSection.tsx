@@ -500,26 +500,26 @@ export const MatrixSection: React.FC<MatrixSectionProps> = ({
   );
 
   return (
-    <div className="bg-[#0a0e22] border border-[#192344] rounded-2xl p-5 space-y-4 shadow-sm hover:border-[#202e58] transition-all">
-      {/* Matrix Tab Selector matching Reference timeframe/category pill toggles */}
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#141d38] pb-3">
-        <div className="flex items-center flex-wrap gap-1 bg-[#0d1228] p-1 rounded-xl border border-[#1d294d] text-xs font-semibold">
+    <div className="glass-panel-primary rounded-2xl p-5 space-y-4 hover:border-cyan-500/35 transition-all holo-shimmer">
+      {/* Matrix Tab Selector */}
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-cyan-500/15 pb-3">
+        <div className="flex items-center flex-wrap gap-1 bg-slate-950/70 p-1 rounded-xl border border-cyan-500/20 text-xs font-mono font-semibold">
           <button
             onClick={() => setActiveTab('banker')}
             className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
               activeTab === 'banker'
-                ? 'bg-blue-600 text-white shadow-sm shadow-blue-900 font-bold'
-                : 'text-slate-400 hover:text-white'
+                ? 'bg-cyan-500/25 text-cyan-200 border border-cyan-400/50 shadow-[0_0_12px_rgba(6,182,212,0.3)] font-bold'
+                : 'text-slate-400 hover:text-cyan-300'
             }`}
           >
-            Banker's (3-Column)
+            Banker's (3-Col)
           </button>
           <button
             onClick={() => setActiveTab('deadlock')}
             className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
               activeTab === 'deadlock'
-                ? 'bg-blue-600 text-white shadow-sm shadow-blue-900 font-bold'
-                : 'text-slate-400 hover:text-white'
+                ? 'bg-cyan-500/25 text-cyan-200 border border-cyan-400/50 shadow-[0_0_12px_rgba(6,182,212,0.3)] font-bold'
+                : 'text-slate-400 hover:text-cyan-300'
             }`}
           >
             Deadlock (Alloc & Req)
@@ -528,8 +528,8 @@ export const MatrixSection: React.FC<MatrixSectionProps> = ({
             onClick={() => setActiveTab('all')}
             className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
               activeTab === 'all'
-                ? 'bg-blue-600 text-white shadow-sm shadow-blue-900 font-bold'
-                : 'text-slate-400 hover:text-white'
+                ? 'bg-cyan-500/25 text-cyan-200 border border-cyan-400/50 shadow-[0_0_12px_rgba(6,182,212,0.3)] font-bold'
+                : 'text-slate-400 hover:text-cyan-300'
             }`}
           >
             All 4 Matrices
@@ -538,8 +538,8 @@ export const MatrixSection: React.FC<MatrixSectionProps> = ({
             onClick={() => setActiveTab('allocation')}
             className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
               activeTab === 'allocation'
-                ? 'bg-emerald-600 text-white shadow-sm shadow-emerald-900 font-bold'
-                : 'text-slate-400 hover:text-white'
+                ? 'bg-emerald-500/25 text-emerald-300 border border-emerald-400/50 shadow-[0_0_12px_rgba(16,185,129,0.3)] font-bold'
+                : 'text-slate-400 hover:text-emerald-300'
             }`}
           >
             Alloc
@@ -548,8 +548,8 @@ export const MatrixSection: React.FC<MatrixSectionProps> = ({
             onClick={() => setActiveTab('maximum')}
             className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
               activeTab === 'maximum'
-                ? 'bg-amber-600 text-white shadow-sm shadow-amber-900 font-bold'
-                : 'text-slate-400 hover:text-white'
+                ? 'bg-amber-500/25 text-amber-300 border border-amber-400/50 shadow-[0_0_12px_rgba(245,158,11,0.3)] font-bold'
+                : 'text-slate-400 hover:text-amber-300'
             }`}
           >
             Max
@@ -558,8 +558,8 @@ export const MatrixSection: React.FC<MatrixSectionProps> = ({
             onClick={() => setActiveTab('need')}
             className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
               activeTab === 'need'
-                ? 'bg-cyan-600 text-white shadow-sm shadow-cyan-900 font-bold'
-                : 'text-slate-400 hover:text-white'
+                ? 'bg-sky-500/25 text-sky-300 border border-sky-400/50 shadow-[0_0_12px_rgba(14,165,233,0.3)] font-bold'
+                : 'text-slate-400 hover:text-sky-300'
             }`}
           >
             Need
@@ -568,8 +568,8 @@ export const MatrixSection: React.FC<MatrixSectionProps> = ({
             onClick={() => setActiveTab('request')}
             className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
               activeTab === 'request'
-                ? 'bg-purple-600 text-white shadow-sm shadow-purple-900 font-bold'
-                : 'text-slate-400 hover:text-white'
+                ? 'bg-purple-500/25 text-purple-300 border border-purple-400/50 shadow-[0_0_12px_rgba(168,85,247,0.3)] font-bold'
+                : 'text-slate-400 hover:text-purple-300'
             }`}
           >
             Request
@@ -577,7 +577,7 @@ export const MatrixSection: React.FC<MatrixSectionProps> = ({
         </div>
 
         {searchQuery && (
-          <div className="text-xs text-blue-400 bg-blue-950/60 border border-blue-800/60 px-3 py-1 rounded-full font-mono font-medium">
+          <div className="text-xs text-cyan-300 bg-cyan-950/60 border border-cyan-500/30 px-3 py-1 rounded-full font-mono font-medium shadow-[0_0_8px_rgba(6,182,212,0.2)]">
             Filtered: "{searchQuery}"
           </div>
         )}
